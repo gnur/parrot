@@ -92,17 +92,17 @@
 
 <script>
 export default {
-  name: 'settings-modal',
-  props: ['settings'],
+  name: "settings-modal",
+  props: ["settings"],
   data() {
     return {
-      active: false,
+      active: false
     };
   },
   methods: {
     show() {
       this.active = true;
-    },
-  },
+    }
+  }
 };
 </script>

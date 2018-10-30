@@ -9,7 +9,7 @@ import (
 	"flag"
 	"os"
 
-	"github.com/tserkov/parrot/pkg/broker"
+	"github.com/gnur/parrot/pkg/broker"
 )
 
 // Main assembles the configuration from command-line arguments

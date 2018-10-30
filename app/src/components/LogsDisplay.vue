@@ -84,11 +84,11 @@
 
 <script>
 export default {
-  name: 'logs-display',
-  props: ['logs', 'settings'],
+  name: "logs-display",
+  props: ["logs", "settings"],
   data() {
     return {
-      todayDateString: new Date().toLocaleDateString(),
+      todayDateString: new Date().toLocaleDateString()
     };
   },
   methods: {
@@ -104,18 +104,22 @@ export default {
       return `${lds} ${d.toLocaleTimeString()}`;
     },
     severityClass(severity) {
-      if (severity === 0) { // Emergicy
-        return 'is-dark';
-      } else if (severity < 4) { // Alert, Critical, Error
-        return 'is-danger';
-      } else if (severity === 4) { // Warning
-        return 'is-warning';
-      } else if (severity === 7) { // Debug
-        return 'is-info';
+      if (severity === 0) {
+        // Emergicy
+        return "is-dark";
+      } else if (severity < 4) {
+        // Alert, Critical, Error
+        return "is-danger";
+      } else if (severity === 4) {
+        // Warning
+        return "is-warning";
+      } else if (severity === 7) {
+        // Debug
+        return "is-info";
       }
 
-      return 'is-light';
-    },
-  },
+      return "is-light";
+    }
+  }
 };
 </script>

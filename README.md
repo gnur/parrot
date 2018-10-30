@@ -1,7 +1,7 @@
-<p align="center"><img src="https://github.com/tserkov/parrot/blob/master/app/src/assets/parrot.svg" width="50%"></p>
+<p align="center"><img src="https://github.com/gnur/parrot/blob/master/app/src/assets/parrot.svg" width="50%"></p>
 
-[![GoDoc](https://godoc.org/github.com/tserkov/parrot?status.svg)](https://godoc.org/github.com/tserkov/parrot)
-[![Build Status](https://travis-ci.com/tserkov/parrot.svg?branch=master)](https://travis-ci.com/tserkov/parrot)
+[![GoDoc](https://godoc.org/github.com/gnur/parrot?status.svg)](https://godoc.org/github.com/gnur/parrot)
+[![Build Status](https://travis-ci.com/gnur/parrot.svg?branch=master)](https://travis-ci.com/gnur/parrot)
 
 # Parrot
 :bird: Parrot is a syslog server with a real-time web dashboard.
@@ -18,7 +18,7 @@
 </p>
 
 ## Installation
-:arrow_double_down: Download the [latest release](https://github.com/tserkov/parrot/releases) and extract the appropriate binary to wherever you'd like (renaming it to `parrot` and placing it in `/usr/local/bin` seems nice for *nix systems).
+:arrow_double_down: Download the [latest release](https://github.com/gnur/parrot/releases) and extract the appropriate binary to wherever you'd like (renaming it to `parrot` and placing it in `/usr/local/bin` seems nice for *nix systems).
 
 ## Usage
 :computer: Just call the binary (`parrot`?) with the appropriate arguments.

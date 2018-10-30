@@ -74,16 +74,16 @@
 </template>
 
 <script>
-import FeedsNav from '@/components/FeedsNav.vue';
-import LogsDisplay from '@/components/LogsDisplay.vue';
-import SettingsModal from '@/components/SettingsModal.vue';
+import FeedsNav from "@/components/FeedsNav.vue";
+import LogsDisplay from "@/components/LogsDisplay.vue";
+import SettingsModal from "@/components/SettingsModal.vue";
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
     LogsDisplay,
     FeedsNav,
-    SettingsModal,
+    SettingsModal
   },
   computed: {
     feedsExist() {
@@ -97,7 +97,7 @@ export default {
       }
 
       return exist;
-    },
+    }
   },
   data() {
     return {
@@ -134,21 +134,21 @@ export default {
           pid: true,
           priority: true,
           severity: true,
-          timestamp: true,
+          timestamp: true
         },
         logsPerPage: 100,
-        dark: false,
-      },
+        dark: false
+      }
     };
   },
   methods: {
     setActiveFeed(feed) {
       this.activeFeed = feed;
-    },
+    }
   },
   mounted() {
-    this.$sse('/squawk', { format: 'json' })
-      .then((sse) => {
+    this.$sse("/squawk", { format: "json" })
+      .then(sse => {
         this.connected = true;
         this.sse = sse;
 
@@ -156,15 +156,16 @@ export default {
           this.connected = false;
         });
 
-        sse.subscribe('l', (log) => {
+        sse.subscribe("l", log => {
           if (!this.feeds[log.app_name]) {
             this.$set(this.feeds, log.app_name, {
               app_name: log.app_name,
-              logs: [],
+              logs: []
             });
           }
 
           this.feeds[log.app_name].logs.push(log);
+          console.log(log);
         });
       })
       .catch(() => {
@@ -177,91 +178,91 @@ export default {
     }
   },
   watch: {
-    'settings.dark': (v) => {
+    "settings.dark": v => {
       if (v) {
-        document.body.classList.add('theme-dark');
+        document.body.classList.add("theme-dark");
       } else {
-        document.body.classList.remove('theme-dark');
+        document.body.classList.remove("theme-dark");
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="scss">
-  @charset "utf-8";
+@charset "utf-8";
 
-  // Import Bulma's core
-  @import "~bulma/sass/utilities/_all";
+// Import Bulma's core
+@import "~bulma/sass/utilities/_all";
 
-  /// Custom theme here
+/// Custom theme here
 
-  // Import Bulma and Buefy styles
-  @import "~bulma";
-  @import "~buefy/src/scss/buefy";
+// Import Bulma and Buefy styles
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
 
-  // Import icons
-  @import "~@mdi/font/css/materialdesignicons.min.css";
+// Import icons
+@import "~@mdi/font/css/materialdesignicons.min.css";
 
-  body {
-    min-height: 100vh;
-  }
+body {
+  min-height: 100vh;
+}
 
-  .navbar + .container {
-    padding-top: 2rem;
-  }
+.navbar + .container {
+  padding-top: 2rem;
+}
 
-  .has-auto-margin-left {
-    margin-left: auto;
-  }
+.has-auto-margin-left {
+  margin-left: auto;
+}
 
-  body.theme-dark {
-    background: linear-gradient(0deg, #33536c, #13334c 25%, #13334c 100%);
+body.theme-dark {
+  background: linear-gradient(0deg, #33536c, #13334c 25%, #13334c 100%);
+  color: #fff;
+
+  nav.navbar.is-primary,
+  .notification,
+  .panel-block,
+  .panel-heading,
+  .table {
+    background: #33536c;
     color: #fff;
 
-    nav.navbar.is-primary,
-    .notification,
-    .panel-block,
-    .panel-heading,
-    .table {
-      background: #33536c;
+    th {
+      border-color: #53738c;
       color: #fff;
-
-      th {
-        border-color: #53738c;
-        color: #fff;
-      }
-
-      tr.detail {
-        background: #23435c;
-        box-shadow: inset 0 1px 3px #53738c;
-      }
-
-      td {
-        border-color: #53738c;
-      }
     }
 
-    .panel-heading {
+    tr.detail {
       background: #23435c;
+      box-shadow: inset 0 1px 3px #53738c;
     }
 
-    .panel-block,
-    .panel-heading {
-      border-color: #33536c;
-
-      &.is-active {
-        border-left-color: #53738c;
-        color: #fff;
-      }
-    }
-
-    a.panel-block:hover {
-      background-color: #43637c;
-    }
-
-    .chevron-cell > a {
-      color: #83a3bc;
+    td {
+      border-color: #53738c;
     }
   }
+
+  .panel-heading {
+    background: #23435c;
+  }
+
+  .panel-block,
+  .panel-heading {
+    border-color: #33536c;
+
+    &.is-active {
+      border-left-color: #53738c;
+      color: #fff;
+    }
+  }
+
+  a.panel-block:hover {
+    background-color: #43637c;
+  }
+
+  .chevron-cell > a {
+    color: #83a3bc;
+  }
+}
 </style>

@@ -18,25 +18,25 @@
 
 <script>
 export default {
-  name: 'feeds-nav',
-  props: ['feeds'],
+  name: "feeds-nav",
+  props: ["feeds"],
   data() {
     return {
-      activeFeed: '',
+      activeFeed: ""
     };
   },
   methods: {
     setActive(f) {
       this.activeFeed = f.app_name;
 
-      this.$emit('select', f);
-    },
-  },
+      this.$emit("select", f);
+    }
+  }
 };
 </script>
 
 <style lang="scss">
-  .has-auto-margin-left {
-    margin-left: auto;
-  }
+.has-auto-margin-left {
+  margin-left: auto;
+}
 </style>
