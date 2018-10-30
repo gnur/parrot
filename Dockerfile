@@ -1,8 +1,12 @@
 #build javascript
 FROM node as jsbuilder
 WORKDIR /workspace
-COPY app /workspace
+COPY app/*.js /workspace/
+COPY app/yarn.lock /workspace/
+COPY app/package.json /workspace/
 RUN yarn
+COPY app/src /workspace/src
+COPY app/public /workspace/public
 RUN yarn build
 
 
