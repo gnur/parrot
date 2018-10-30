@@ -1,9 +1,5 @@
-// Copyright 2018 James Churchard. All rights reserved.
-// Use of this source code is governed by MIT license,
-// a copy can be found in the LICENSE file.
-
-// Package broker starts up the syslog and web servers, and optionally
-// the syslog forwarding server.  broker also manages the relay of log
+// Package broker starts up the syslog and web servers.
+// broker also manages the relay of log
 // messages from the syslog listener to the sse server.
 package broker
 
@@ -25,10 +21,9 @@ import (
 // where to receive syslog messages, whether to forward them, and
 // where to serve the web dashboard.
 type Config struct {
-	Forwarders URLs
-	Listeners  URLs
-	Silent     bool
-	Web        string
+	Listeners URLs
+	Silent    bool
+	Web       string
 }
 
 // URLs satisfies the flag.Value interface for a list of URI
@@ -38,6 +33,7 @@ func (us *URLs) String() string {
 	return ""
 }
 
+// Set values or something
 func (us *URLs) Set(value string) error {
 	u, err := url.Parse(value)
 
@@ -62,15 +58,10 @@ func Start(c *Config) error {
 | |   ( ( | | |  | |  | |_| | |__
 |_|    \_||_|_|  |_|   \___/ \___))  v1.0.2`)
 	}
-	// We haven't yet implemented syslog forwarding
-	// TODO(tserkov)
-	if len(c.Forwarders) > 0 {
-		return errors.New("Forwarding is not yet implemented!")
-	}
 
 	// At least one listener must be specified.
 	if len(c.Listeners) == 0 {
-		return errors.New("No mode specified! (TCP, UDP, or Unix required)")
+		return errors.New("no mode specified! (TCP, UDP, or Unix required)")
 	}
 
 	// Create our myriad of servers.
@@ -106,7 +97,7 @@ func Start(c *Config) error {
 				log.Printf("Listening for syslog messages at unix://%s\n", u.Path)
 			}
 		default:
-			return errors.New("Invalid schema specified. Only tcp, udp, and unix are permitted.")
+			return errors.New("invalid schema specified")
 		}
 	}
 
@@ -119,8 +110,6 @@ func Start(c *Config) error {
 	// for dissemination to dashboard clients.
 	go func() {
 		for l := range sl.ReceiveLog {
-			// TODO(tserkov): Fire a goroutine to forward the log, if so configured.
-
 			// These fields are of no interest to the dashboard.
 			delete(l, "tls_peer")
 			delete(l, "version")

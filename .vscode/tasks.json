@@ -1,0 +1,17 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "buildAndRun",
+            "type": "shell",
+            "command": "docker-compose rm -s -f -v; docker-compose up --build --force-recreate",
+            "isBackground": true,
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

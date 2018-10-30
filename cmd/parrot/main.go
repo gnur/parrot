@@ -17,7 +17,6 @@ import (
 func main() {
 	c := &broker.Config{}
 
-	flag.Var(&c.Forwarders, "forward", "forward received logs to the specified syslog server")
 	flag.Var(&c.Listeners, "listen", "listen for logs on the specified location (required)")
 	flag.StringVar(&c.Web, "web", "127.0.0.1:8080", "host:port for dashboard webserver")
 	flag.BoolVar(&c.Silent, "silent", false, "specify to disable info logging")

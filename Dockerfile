@@ -7,9 +7,9 @@ RUN yarn build
 
 
 #pack static files and create binary
-FROM golang:1.11 as builder
+FROM golang:1.11-alpine as builder
 WORKDIR /go/src/github.com/gnur/parrot/
-#RUN apt-get update && apt-get install -y git
+RUN apk --no-cache add git
 
 RUN go get github.com/GeertJohan/go.rice
 RUN go get github.com/GeertJohan/go.rice/rice

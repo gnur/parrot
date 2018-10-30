@@ -29,19 +29,6 @@
   revision = "ae77be60afb1dcacde03767a8c37337fad28ac14"
 
 [[projects]]
-  digest = "1:4193dbeeaf062b29fa9ad83e983aefce47de9e5183af62997af6dc79dd3adba0"
-  name = "github.com/gnur/parrot"
-  packages = [
-    "pkg/broker",
-    "pkg/sse",
-    "pkg/syslog",
-    "pkg/webserver",
-  ]
-  pruneopts = "UT"
-  revision = "66ff7b0d3603e5e00272dfbcf8bd5bf5423bc764"
-  version = "v1.0.4"
-
-[[projects]]
   digest = "1:0e2384e743a5fba9c3d872bc972363608b6498f71125dcf93fc52aa28e569182"
   name = "gopkg.in/mcuadros/go-syslog.v2"
   packages = [
@@ -60,10 +47,6 @@
   analyzer-version = 1
   input-imports = [
     "github.com/GeertJohan/go.rice",
-    "github.com/gnur/parrot/pkg/broker",
-    "github.com/gnur/parrot/pkg/sse",
-    "github.com/gnur/parrot/pkg/syslog",
-    "github.com/gnur/parrot/pkg/webserver",
     "gopkg.in/mcuadros/go-syslog.v2",
   ]
   solver-name = "gps-cdcl"

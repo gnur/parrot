@@ -1,7 +1,3 @@
-// Copyright 2018 James Churchard. All rights reserved.
-// Use of this source code is governed by MIT license,
-// a copy can be found in the LICENSE file.
-
 // Package webserver serves the web dashboard from either embedded files (prod)
 // or app directory (dev), as well as provide the SSE server endpoint.
 package webserver
@@ -17,11 +13,12 @@ import (
 	"github.com/GeertJohan/go.rice"
 )
 
+// Server is a http server
 type Server struct {
 	server *http.Server
 }
 
-// Start beings serving the web dashboard at the specified address, and
+// New beings serving the web dashboard at the specified address, and
 // sets up the endpoint for the provided SSE server.
 func New(addr string, sseServer *sse.Server) *Server {
 	r := http.NewServeMux()
@@ -49,7 +46,8 @@ func (s *Server) Start() {
 
 // Shutdown cleanly stops the server listener.
 func (s *Server) Shutdown() error {
-	ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, can := context.WithTimeout(context.Background(), 1*time.Second)
+	defer can()
 
 	return s.server.Shutdown(ctx)
 }
