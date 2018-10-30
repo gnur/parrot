@@ -1,4 +1,14 @@
 <template>
+  <section>
+        <b-field grouped group-multiline>
+            <div v-for="(column, index) in columnsTemplate" 
+                :key="index"
+                class="control">
+                <b-checkbox v-model="column.visible">
+                    {{ column.name }}
+                </b-checkbox>
+            </div>
+        </b-field>
   <b-table
     v-if="logs.length > 0"
     :data="logs"
@@ -9,26 +19,11 @@
     pagination-simple
   >
     <template slot-scope="props">
-      <b-table-column
-        v-if="settings.cols.id"
-        field="datetime"
-        label="timestamp"
-      >{{ props.row.date }}</b-table-column>
-      <b-table-column
-        v-if="settings.cols.hostname"
-        field="source"
-        label="source"
-      >{{ props.row.source }}</b-table-column>
-      <b-table-column
-        v-if="settings.cols.pid"
-        field="level"
-        label="level"
-      >{{ props.row.level }}</b-table-column>
-      <b-table-column
-        v-if="settings.cols.message"
-        field="message"
-        label="message"
-      >{{ props.row.msg }}</b-table-column>
+      <b-table-column v-for="(column, index) in columnsTemplate"
+        :key="index"
+        :label="column.name"
+        :visible="column.visible"
+      >{{ props.row[column.name] }}</b-table-column>
     </template>
 
     <template slot="detail" slot-scope="props">
@@ -41,6 +36,7 @@
       No log messages received&hellip; yet!
     </p>
   </div>
+  </section>
 </template>
 
 <script>
@@ -49,7 +45,13 @@ export default {
   props: ["logs", "settings"],
   data() {
     return {
-      todayDateString: new Date().toLocaleDateString()
+      todayDateString: new Date().toLocaleDateString(),
+      columnsTemplate: [
+        { name: "time", visible: true },
+        { name: "source", visible: true },
+        { name: "level", visible: true },
+        { name: "message", visible: true }
+      ]
     };
   },
   methods: {
@@ -72,6 +74,31 @@ export default {
       }
 
       return "is-light";
+    }
+  },
+  watch: {
+    logs: function() {
+      var fields = [];
+      for (const log of this.logs) {
+        for (var prop in log) {
+          if (fields.indexOf(prop) === -1) {
+            fields.push(prop);
+            var found = false;
+            for (var col of this.columnsTemplate) {
+              if (col.name == prop) {
+                found = true;
+              }
+            }
+            if (!found) {
+              this.columnsTemplate.push({
+                name: prop,
+                visible: false
+              });
+            }
+          }
+        }
+      }
+      console.log(fields);
     }
   }
 };
