@@ -9,7 +9,6 @@ package sse
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"regexp"
 	"time"
@@ -119,7 +118,6 @@ func (s *Server) run() {
 				payload.WriteString(event.Event)
 				payload.WriteByte('\n')
 			}
-			fmt.Printf("%+v\n", event.Data)
 			payload.WriteString("data: ")
 
 			found := false
@@ -128,21 +126,16 @@ func (s *Server) run() {
 				val, ok := v["content"].(string)
 				if ok {
 					logContent := val
-					fmt.Println(logContent)
 					payload.Write([]byte(reJSONExtract.FindString(logContent)))
 					found = true
-				} else {
-					fmt.Println("----------not ok")
 				}
 			}
 			// this means an logrus message was found
 			if !found {
-				fmt.Println("----------not found")
 
 				data, err := json.Marshal(event.Data)
 				if err != nil {
 					// Silent failure
-					fmt.Println("NOT SILENT ANTYMORE BEYATCH")
 					return
 				}
 				payload.Write(data)
