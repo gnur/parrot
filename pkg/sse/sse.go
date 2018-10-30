@@ -9,13 +9,17 @@ package sse
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"regexp"
 	"time"
 )
 
 // writeTimeout is how long to attempt to write to a client
 // before deciding they're too slow and leaving them to fend for themselves.
 const writeTimeout time.Duration = time.Second * 1
+
+var reJSONExtract = regexp.MustCompile(`{.*}`)
 
 // client represents a client connection and accepts serialized events.
 type client = chan []byte
@@ -42,7 +46,7 @@ type Server struct {
 	SendEvent chan *Event
 }
 
-// New creates a new SSE server, with all required events chans, and
+// New creates a new SSE server, with all required events channels, and
 // starts the client management and events dispatch listener loops.
 func New() *Server {
 	s := &Server{
@@ -57,8 +61,8 @@ func New() *Server {
 	return s
 }
 
-// ServeHTTP satifies the http.Handler interface, allowing sse.Server to
-// be passed directly as a handler for http-compliant muxes (muxxi?).
+// ServeHTTP satisfies the http.Handler interface, allowing sse.Server to
+// be passed directly as a handler for http-compliant mux'.
 // It handles the connection set-up for event-streams, and client pool
 // management.
 func (s Server) ServeHTTP(w http.ResponseWriter, _ *http.Request) {
@@ -115,15 +119,35 @@ func (s *Server) run() {
 				payload.WriteString(event.Event)
 				payload.WriteByte('\n')
 			}
+			fmt.Printf("%+v\n", event.Data)
+			payload.WriteString("data: ")
 
-			data, err := json.Marshal(event.Data)
-			if err != nil {
-				// Silent failure
-				return
+			found := false
+			v, ok := event.Data.(map[string]interface{})
+			if ok {
+				val, ok := v["content"].(string)
+				if ok {
+					logContent := val
+					fmt.Println(logContent)
+					payload.Write([]byte(reJSONExtract.FindString(logContent)))
+					found = true
+				} else {
+					fmt.Println("----------not ok")
+				}
+			}
+			// this means an logrus message was found
+			if !found {
+				fmt.Println("----------not found")
+
+				data, err := json.Marshal(event.Data)
+				if err != nil {
+					// Silent failure
+					fmt.Println("NOT SILENT ANTYMORE BEYATCH")
+					return
+				}
+				payload.Write(data)
 			}
 
-			payload.WriteString("data: ")
-			payload.Write(data)
 			payload.Write([]byte{'\n', '\n'})
 
 			for c := range s.clients {

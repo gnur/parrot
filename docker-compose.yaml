@@ -6,6 +6,7 @@ services:
     ports:
      - 514:514/udp
      - 8080:8080
-  log-pusher:
-    image: debian
-    command: [ "bash", "-c", "apt-get update; apt-get install -y netcat; while true; do echo test | nc -u -w1 parrot 514; sleep 2; done"]
+  log-generator:
+    build:
+      context: ../parrot/
+    entrypoint: [ "/log-generator"]

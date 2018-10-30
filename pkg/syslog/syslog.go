@@ -49,6 +49,7 @@ func (s *Server) Start() error {
 	return nil
 }
 
+// Shutdown shuts the server down.. really
 func (s *Server) Shutdown() {
 	s.server.Kill()
 }
