@@ -11,6 +11,7 @@
     "@mdi/font": "^2.8.94",
     "buefy": "^0.7.0",
     "vue": "^2.5.17",
+    "vue-resource": "^1.5.1",
     "vue-sse": "^1.0.2"
   },
   "devDependencies": {

@@ -4,18 +4,22 @@
 package broker
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 	"net/url"
 	"os"
 	"os/signal"
+	"regexp"
 	"time"
 
 	"github.com/gnur/parrot/pkg/sse"
 	"github.com/gnur/parrot/pkg/syslog"
 	"github.com/gnur/parrot/pkg/webserver"
 )
+
+var reJSONExtract = regexp.MustCompile(`{.*}`)
 
 // Config stores all options necessary for the entire workflow of
 // where to receive syslog messages, whether to forward them, and
@@ -119,12 +123,32 @@ func Start(c *Config) error {
 			if _, ok := l["timestamp"]; ok {
 				l["timestamp"] = l["timestamp"].(time.Time).Unix()
 			}
+			var data []byte
+
+			found := false
+			val, ok := l["content"].(string)
+			if ok {
+				logContent := val
+				data = []byte(reJSONExtract.FindString(logContent))
+				found = true
+			}
+			// this means an logrus message was found
+			if !found {
+
+				var err error
+				data, err = json.Marshal(l)
+				if err != nil {
+					// Silent failure
+					return
+				}
+			}
 
 			// Pass the transformed log to the SSE server.
 			se.SendEvent <- &sse.Event{
 				Event: "l",
-				Data:  l,
+				Data:  data,
 			}
+			ws.DataChan <- data
 		}
 	}()
 

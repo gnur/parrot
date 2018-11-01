@@ -12,7 +12,7 @@
   <b-table
     v-if="logs.length > 0"
     :data="logs"
-    :default-sort="['date', 'asc']"
+    :default-sort="['time', 'desc']"
     :per-page="settings.logsPerPage"
     detailed
     paginated
@@ -22,7 +22,9 @@
       <b-table-column v-for="(column, index) in columnsTemplate"
         :key="index"
         :label="column.name"
+        :field="column.name"
         :visible="column.visible"
+        sortable
       >{{ props.row[column.name] }}</b-table-column>
     </template>
 
@@ -50,7 +52,7 @@ export default {
         { name: "time", visible: true },
         { name: "source", visible: true },
         { name: "level", visible: true },
-        { name: "message", visible: true }
+        { name: "msg", visible: true }
       ]
     };
   },
@@ -87,6 +89,7 @@ export default {
             for (var col of this.columnsTemplate) {
               if (col.name == prop) {
                 found = true;
+                break;
               }
             }
             if (!found) {

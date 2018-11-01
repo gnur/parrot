@@ -5,12 +5,12 @@
     </p>
     <a
       v-for="f in feeds"
-      :key="f.app_name"
+      :key="f.source"
       class="panel-block"
-      :class="{ 'is-active': activeFeed === f.app_name }"
+      :class="{ 'is-active': activeFeed === f.source }"
       @click="setActive(f)"
     >
-      {{ f.app_name }}
+      {{ f.source }}
       <span class="tag is-primary has-auto-margin-left">{{ f.logs.length }}</span>
     </a>
   </nav>
@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     setActive(f) {
-      this.activeFeed = f.app_name;
+      this.activeFeed = f.source;
 
       this.$emit("select", f);
     }

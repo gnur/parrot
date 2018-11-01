@@ -2,7 +2,8 @@ package main
 
 import (
 	"log/syslog"
-	"net/http"
+	"math/rand"
+	"os"
 	"time"
 
 	lSyslog "github.com/sirupsen/logrus/hooks/syslog"
@@ -17,22 +18,26 @@ func main() {
 		log.AddHook(hook)
 	}
 	counter := 0
+	hostname, err := os.Hostname()
+	if err != nil {
+		hostname = "a host with no name"
+	}
 	for {
+		rnd := rand.Intn(600) + 1
+		time.Sleep(time.Duration(rnd) * time.Millisecond)
+
 		log.WithFields(log.Fields{
-			"source":  "generator",
-			"date":    time.Now(),
+			"source":  hostname,
 			"counter": counter,
 		}).Info("test")
+		rnd = rand.Intn(600) + 1
+		time.Sleep(time.Duration(rnd) * time.Millisecond)
 		counter++
 		log.WithFields(log.Fields{
-			"source":  "generator",
-			"date":    time.Now(),
-			"counter": counter,
+			"source":  hostname,
+			"counter": rnd,
 		}).Warning("test-warning")
 		counter++
-		time.Sleep(10 * time.Second)
-	}
 
-	log.Info("booksing is now running")
-	log.Fatal(http.ListenAndServe(":7132", nil))
+	}
 }

@@ -144,9 +144,24 @@ export default {
   methods: {
     setActiveFeed(feed) {
       this.activeFeed = feed;
+    },
+    appendLog(log) {
+      if (!this.feeds[log.source]) {
+        this.$set(this.feeds, log.source, {
+          source: log.source,
+          logs: []
+        });
+      }
+
+      this.feeds[log.source].logs.push(log);
     }
   },
   mounted() {
+    this.$http.get("/logs").then(resp => {
+      for (var log of resp.body) {
+        this.appendLog(log);
+      }
+    });
     this.$sse("/squawk", { format: "json" })
       .then(sse => {
         this.connected = true;
@@ -157,15 +172,7 @@ export default {
         });
 
         sse.subscribe("l", log => {
-          if (!this.feeds[log.app_name]) {
-            this.$set(this.feeds, log.app_name, {
-              app_name: log.app_name,
-              logs: []
-            });
-          }
-
-          this.feeds[log.app_name].logs.push(log);
-          console.log(log);
+          this.appendLog(log);
         });
       })
       .catch(() => {

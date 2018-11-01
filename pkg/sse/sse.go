@@ -8,17 +8,13 @@ package sse
 
 import (
 	"bytes"
-	"encoding/json"
 	"net/http"
-	"regexp"
 	"time"
 )
 
 // writeTimeout is how long to attempt to write to a client
 // before deciding they're too slow and leaving them to fend for themselves.
 const writeTimeout time.Duration = time.Second * 1
-
-var reJSONExtract = regexp.MustCompile(`{.*}`)
 
 // client represents a client connection and accepts serialized events.
 type client = chan []byte
@@ -27,7 +23,7 @@ type client = chan []byte
 // Data will be processed by the JSON marshaller before being sent.
 type Event struct {
 	Event string
-	Data  interface{}
+	Data  []byte
 }
 
 // Server receives events and broadcasts them to all connected clients.
@@ -119,27 +115,7 @@ func (s *Server) run() {
 				payload.WriteByte('\n')
 			}
 			payload.WriteString("data: ")
-
-			found := false
-			v, ok := event.Data.(map[string]interface{})
-			if ok {
-				val, ok := v["content"].(string)
-				if ok {
-					logContent := val
-					payload.Write([]byte(reJSONExtract.FindString(logContent)))
-					found = true
-				}
-			}
-			// this means an logrus message was found
-			if !found {
-
-				data, err := json.Marshal(event.Data)
-				if err != nil {
-					// Silent failure
-					return
-				}
-				payload.Write(data)
-			}
+			payload.Write(event.Data)
 
 			payload.Write([]byte{'\n', '\n'})
 
