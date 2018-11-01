@@ -10,3 +10,15 @@ services:
     build:
       context: ../parrot/
     entrypoint: [ "/log-generator"]
+  log-generator2:
+    build:
+      context: ../parrot/
+    entrypoint: [ "/log-generator"]
+  log-generator3:
+    build:
+      context: ../parrot/
+    entrypoint: [ "/log-generator"]
+  log-generator4:
+    build:
+      context: ../parrot/
+    entrypoint: [ "/log-generator"]
